@@ -22,22 +22,15 @@ Multi-Language 🌐: run script supports executing Python, C++, Java, JavaScript
 
 ## 🚀 Easy Install (Recommended)
 
-This script will automatically detect bash or zsh and add QuickRun to your configuration.
+Just copy and paste this command into your terminal. It will automatically download the project to ~/QuickRun (if needed) and run the interactive installer.
 
-Make the installer executable:
+Just 📋copy-paste the following command:
 ```bash
-chmod +x install.sh
-
-
-# Run the installer:
-
-./install.sh
+curl -fsSL [https://raw.githubusercontent.com/Earth1283/QuickRun/main/install.sh](https://raw.githubusercontent.com/Earth1283/QuickRun/main/install.sh) | bash
 ```
 
-The script will guide you, asking if you prefer the Alias Method or the PATH Method.
-
-Reload your shell:
-After the script finishes, apply the changes to your current session.
+**Reload your shell:**
+After the script finishes, apply the changes to your current session (or just open a new session).
 
 # If you use zsh
 `source ~/.zshrc`
