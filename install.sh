@@ -2,12 +2,53 @@
 #
 # QuickRun Easy Install Script
 # Detects bash/zsh and adds aliases or PATH export.
+# Can be run from within the repo or via:
+# curl -fsSL https://raw.githubusercontent.com/Earth1283/QuickRun/main/install.sh | bash
 
-# Get the directory where the install script is located (the project root)
-# This ensures paths are absolute and correct, even if run from elsewhere.
+# --- Configuration ---
+GITHUB_REPO_URL="https://raw.githubusercontent.com/Earth1283/QuickRun/main"
+PROJECT_FILES=("run.py" "open.py" "install.sh")
+# By default, we'll install to ~/QuickRun if run remotely
+REMOTE_INSTALL_DIR="$HOME/QuickRun"
+
+
+# Get the directory where the script *thinks* it is.
+# If run via curl|bash, this will be the user's CWD.
+# If run from file, it's the script's dir.
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
+# --- Smart Installer Logic ---
+# Check if we're running inside the cloned repo by looking for run.py
+if [ ! -f "$SCRIPT_DIR/run.py" ]; then
+    echo "🔎 QuickRun files not found. Assuming remote install..."
+    echo "Installing to $REMOTE_INSTALL_DIR..."
+    
+    # Check for git, prefer it if available
+    if command -v git &> /dev/null; then
+        if [ -d "$REMOTE_INSTALL_DIR" ]; then
+            echo "Directory $REMOTE_INSTALL_DIR already exists. Skipping clone."
+        else
+            echo "Cloning repository via git..."
+            git clone https://github.com/Earth1283/QuickRun.git "$REMOTE_INSTALL_DIR"
+        fi
+    else
+        # Fallback to curl if git isn't available
+        echo "git not found. Downloading files manually via curl..."
+        mkdir -p "$REMOTE_INSTALL_DIR"
+        for FILE in "${PROJECT_FILES[@]}"; do
+            echo "Downloading $FILE..."
+            curl -fsSL "$GITHUB_REPO_URL/$FILE" -o "$REMOTE_INSTALL_DIR/$FILE"
+        done
+    fi
+    
+    # IMPORTANT: Update SCRIPT_DIR to point to the new location
+    SCRIPT_DIR="$REMOTE_INSTALL_DIR"
+    echo "✅ Project files are now in $SCRIPT_DIR"
+    echo ""
+fi
+
 # --- Shell Detection ---
+# Now, we proceed with the original logic, using the (potentially new) SCRIPT_DIR
 CURRENT_SHELL=$(basename "$SHELL")
 CONFIG_FILE=""
 
@@ -31,7 +72,7 @@ echo ""
 # --- Check for existing installation ---
 if grep -q "# --- QuickRun" "$CONFIG_FILE"; then
     echo "✅ QuickRun setup already found in $CONFIG_FILE."
-    echo "To reinstall, please remove the QuickRun section from that file first."
+    echo "Note: If you moved the project, run this installer again."
     exit 0
 fi
 
