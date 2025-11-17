@@ -26,7 +26,7 @@ Just copy and paste this command into your terminal. It will automatically downl
 
 Just 📋copy-paste the following command:
 ```bash
-curl -fsSL [https://raw.githubusercontent.com/Earth1283/QuickRun/main/install.sh](https://raw.githubusercontent.com/Earth1283/QuickRun/main/install.sh) | bash
+curl -fsSL https://raw.githubusercontent.com/Earth1283/QuickRun/main/install.sh | bash
 ```
 
 **Reload your shell:**
