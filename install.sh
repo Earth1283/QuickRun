@@ -77,12 +77,26 @@ if grep -q "# --- QuickRun" "$CONFIG_FILE"; then
 fi
 
 # --- Ask for Installation Method ---
-echo "How do you want to install QuickRun?"
-echo "  1) Alias Method (Simple, works everywhere)"
-echo "  2) PATH Method (Recommended, turns scripts into 'real' commands)"
-echo ""
-read -p "Enter your choice (1 or 2): " METHOD_CHOICE
-echo ""
+METHOD_CHOICE=""
+
+# Check if stdin is a terminal (running interactively)
+if [ -t 0 ]; then
+    echo "How do you want to install QuickRun?"
+    echo "  1) Alias Method (Simple, works everywhere)"
+    echo "  2) PATH Method (Recommended, turns scripts into 'real' commands)"
+    echo ""
+    read -p "Enter your choice (1 or 2) [Default: 2]: " METHOD_CHOICE
+    echo ""
+    # Default to 2 if user just hits enter
+    if [ -z "$METHOD_CHOICE" ]; then
+        METHOD_CHOICE="2"
+    fi
+else
+    # Not running interactively (e.g., curl | bash)
+    echo "Running in non-interactive mode. Defaulting to recommended PATH Method (2)."
+    METHOD_CHOICE="2"
+fi
+
 
 # --- Installation Logic ---
 if [ "$METHOD_CHOICE" = "1" ]; then
